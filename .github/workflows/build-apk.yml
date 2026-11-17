@@ -1,3 +1,4 @@
+
 name: Build Fashion Roulette APK
 
 on:
@@ -12,19 +13,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Extract project
+        run: |
+          unzip -q FashionRoulette-Android-Project-with-APK-Build.zip -d source
+
       - name: Build APK
         run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          cd source/FashionRoulette
+          gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Fashion-Roulette-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: source/FashionRoulette/app/build/outputs/apk/debug/app-debug.apk
+          
